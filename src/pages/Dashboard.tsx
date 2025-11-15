@@ -2,41 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
+import { useComplaints } from "@/contexts/ComplaintContext";
 import logo from "@/assets/brototype-logo.png";
 import { Plus, LogOut, Clock, CheckCircle2, AlertCircle } from "lucide-react";
 
-const mockComplaints = [
-  {
-    id: 1,
-    title: "Food Quality Issue",
-    category: "Food",
-    description: "The food served today was not up to standard",
-    status: "pending",
-    priority: "high",
-    date: "2024-01-15",
-  },
-  {
-    id: 2,
-    title: "AC Not Working",
-    category: "Facilities",
-    description: "Air conditioning in Room 301 is not functioning",
-    status: "in-progress",
-    priority: "medium",
-    date: "2024-01-14",
-  },
-  {
-    id: 3,
-    title: "Event Schedule Conflict",
-    category: "Events",
-    description: "Two events scheduled at the same time",
-    status: "resolved",
-    priority: "low",
-    date: "2024-01-12",
-  },
-];
-
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { complaints } = useComplaints();
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -101,7 +73,20 @@ const Dashboard = () => {
           </div>
 
           <div className="grid gap-6">
-            {mockComplaints.map((complaint) => (
+            {complaints.length === 0 ? (
+              <Card className="p-12 text-center">
+                <AlertCircle className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                <h3 className="text-xl font-bold mb-2">No Complaints Yet</h3>
+                <p className="text-muted-foreground mb-6">
+                  You haven't submitted any complaints. Click the button above to get started.
+                </p>
+                <Button onClick={() => navigate("/new-complaint")}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Submit Your First Complaint
+                </Button>
+              </Card>
+            ) : (
+              complaints.map((complaint) => (
               <Card key={complaint.id} className="p-6 hover:shadow-lg transition-all">
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                   <div className="flex-1">
@@ -127,7 +112,8 @@ const Dashboard = () => {
                   </div>
                 </div>
               </Card>
-            ))}
+              ))
+            )}
           </div>
         </div>
       </div>

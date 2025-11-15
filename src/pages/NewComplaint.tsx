@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useNavigate } from "react-router-dom";
+import { useComplaints } from "@/contexts/ComplaintContext";
 import logo from "@/assets/brototype-logo.png";
 import { ArrowLeft, Upload, Mic, Image } from "lucide-react";
 import { useState } from "react";
@@ -19,15 +20,35 @@ import { useToast } from "@/hooks/use-toast";
 const NewComplaint = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { addComplaint } = useComplaints();
+  
+  const [title, setTitle] = useState("");
+  const [category, setCategory] = useState("");
+  const [priority, setPriority] = useState("");
+  const [description, setDescription] = useState("");
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    addComplaint({
+      title,
+      category,
+      priority: priority as "low" | "medium" | "high",
+      description,
+      status: "pending",
+      hasAudio: !!audioFile,
+      hasImages: imageFiles.length > 0,
+      audioFile,
+      imageFiles,
+    });
+
     toast({
       title: "Complaint Submitted",
-      description: "Your complaint has been submitted successfully.",
+      description: "Your complaint has been submitted successfully and is now visible to admins.",
     });
+    
     navigate("/dashboard");
   };
 
@@ -69,29 +90,31 @@ const NewComplaint = () => {
                 <Input
                   id="title"
                   placeholder="Brief description of the issue"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
                   required
                 />
               </div>
 
               <div>
                 <Label htmlFor="category">Category</Label>
-                <Select required>
+                <Select value={category} onValueChange={setCategory} required>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a category" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="food">Food</SelectItem>
-                    <SelectItem value="facilities">Facilities</SelectItem>
-                    <SelectItem value="events">Event Organization</SelectItem>
-                    <SelectItem value="admin">Administrative</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
+                    <SelectItem value="Food">Food</SelectItem>
+                    <SelectItem value="Facilities">Facilities</SelectItem>
+                    <SelectItem value="Events">Event Organization</SelectItem>
+                    <SelectItem value="Administrative">Administrative</SelectItem>
+                    <SelectItem value="Other">Other</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div>
                 <Label htmlFor="priority">Priority</Label>
-                <Select required>
+                <Select value={priority} onValueChange={setPriority} required>
                   <SelectTrigger>
                     <SelectValue placeholder="Select priority level" />
                   </SelectTrigger>
@@ -109,6 +132,8 @@ const NewComplaint = () => {
                   id="description"
                   placeholder="Provide detailed information about your complaint"
                   rows={6}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
                   required
                 />
               </div>

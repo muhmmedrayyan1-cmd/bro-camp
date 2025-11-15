@@ -9,59 +9,32 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useNavigate } from "react-router-dom";
+import { useComplaints, Complaint } from "@/contexts/ComplaintContext";
 import logo from "@/assets/brototype-logo.png";
 import { LogOut, Clock, CheckCircle2, AlertCircle, Filter } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-
-const mockComplaints = [
-  {
-    id: 1,
-    title: "Food Quality Issue",
-    student: "John Doe",
-    category: "Food",
-    description: "The food served today was not up to standard",
-    status: "pending",
-    priority: "high",
-    date: "2024-01-15",
-    hasAudio: true,
-    hasImages: true,
-  },
-  {
-    id: 2,
-    title: "AC Not Working",
-    student: "Jane Smith",
-    category: "Facilities",
-    description: "Air conditioning in Room 301 is not functioning",
-    status: "in-progress",
-    priority: "medium",
-    date: "2024-01-14",
-    hasAudio: false,
-    hasImages: true,
-  },
-  {
-    id: 3,
-    title: "Event Schedule Conflict",
-    student: "Mike Johnson",
-    category: "Events",
-    description: "Two events scheduled at the same time",
-    status: "resolved",
-    priority: "low",
-    date: "2024-01-12",
-    hasAudio: false,
-    hasImages: false,
-  },
-];
+import { useState } from "react";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { complaints, updateComplaintStatus } = useComplaints();
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
 
-  const handleStatusChange = (complaintId: number, newStatus: string) => {
+  const handleStatusChange = (complaintId: number, newStatus: Complaint["status"]) => {
+    updateComplaintStatus(complaintId, newStatus);
     toast({
       title: "Status Updated",
-      description: `Complaint #${complaintId} status changed to ${newStatus}`,
+      description: `Complaint #${complaintId} status changed to ${newStatus.replace("-", " ")}`,
     });
   };
+
+  const filteredComplaints = complaints.filter((complaint) => {
+    const statusMatch = statusFilter === "all" || complaint.status === statusFilter;
+    const categoryMatch = categoryFilter === "all" || complaint.category === categoryFilter;
+    return statusMatch && categoryMatch;
+  });
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -103,9 +76,9 @@ const AdminDashboard = () => {
   };
 
   const stats = {
-    pending: mockComplaints.filter((c) => c.status === "pending").length,
-    inProgress: mockComplaints.filter((c) => c.status === "in-progress").length,
-    resolved: mockComplaints.filter((c) => c.status === "resolved").length,
+    pending: complaints.filter((c) => c.status === "pending").length,
+    inProgress: complaints.filter((c) => c.status === "in-progress").length,
+    resolved: complaints.filter((c) => c.status === "resolved").length,
   };
 
   return (
@@ -158,9 +131,9 @@ const AdminDashboard = () => {
           </div>
 
           <Card className="p-6 mb-6">
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-4">
               <Filter className="w-5 h-5 text-muted-foreground" />
-              <Select>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="w-48">
                   <SelectValue placeholder="Filter by status" />
                 </SelectTrigger>
@@ -171,22 +144,35 @@ const AdminDashboard = () => {
                   <SelectItem value="resolved">Resolved</SelectItem>
                 </SelectContent>
               </Select>
-              <Select>
+              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
                 <SelectTrigger className="w-48">
                   <SelectValue placeholder="Filter by category" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Categories</SelectItem>
-                  <SelectItem value="food">Food</SelectItem>
-                  <SelectItem value="facilities">Facilities</SelectItem>
-                  <SelectItem value="events">Events</SelectItem>
+                  <SelectItem value="Food">Food</SelectItem>
+                  <SelectItem value="Facilities">Facilities</SelectItem>
+                  <SelectItem value="Events">Events</SelectItem>
+                  <SelectItem value="Administrative">Administrative</SelectItem>
+                  <SelectItem value="Other">Other</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </Card>
 
           <div className="space-y-4">
-            {mockComplaints.map((complaint) => (
+            {filteredComplaints.length === 0 ? (
+              <Card className="p-12 text-center">
+                <AlertCircle className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                <h3 className="text-xl font-bold mb-2">No Complaints Found</h3>
+                <p className="text-muted-foreground">
+                  {statusFilter !== "all" || categoryFilter !== "all"
+                    ? "Try adjusting your filters to see more complaints."
+                    : "No complaints have been submitted yet."}
+                </p>
+              </Card>
+            ) : (
+              filteredComplaints.map((complaint) => (
               <Card key={complaint.id} className="p-6">
                 <div className="flex flex-col lg:flex-row gap-6">
                   <div className="flex-1">
@@ -229,7 +215,7 @@ const AdminDashboard = () => {
                       </Label>
                       <Select
                         defaultValue={complaint.status}
-                        onValueChange={(value) => handleStatusChange(complaint.id, value)}
+                        onValueChange={(value) => handleStatusChange(complaint.id, value as Complaint["status"])}
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -244,7 +230,8 @@ const AdminDashboard = () => {
                   </div>
                 </div>
               </Card>
-            ))}
+              ))
+            )}
           </div>
         </div>
       </div>
