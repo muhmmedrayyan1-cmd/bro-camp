@@ -13,6 +13,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useComplaints } from "@/contexts/ComplaintContext";
 import logo from "@/assets/brototype-logo.png";
+import bgImage from "@/assets/brototype-bg.png";
 import { ArrowLeft, Upload, Mic, Image } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -65,8 +66,16 @@ const NewComplaint = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted">
-      <div className="container mx-auto px-4 py-8">
+    <div 
+      className="min-h-screen bg-gradient-to-br from-background via-background to-muted relative"
+      style={{
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url(${bgImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
+      }}
+    >
+      <div className="container mx-auto px-4 py-8 relative z-10">
         <nav className="flex justify-between items-center mb-8">
           <img src={logo} alt="Brototype" className="h-10 md:h-12" />
           <Button variant="ghost" onClick={() => navigate("/dashboard")}>
