@@ -4,7 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { useComplaints } from "@/contexts/ComplaintContext";
 import logo from "@/assets/brototype-logo.png";
-import { Plus, LogOut, Clock, CheckCircle2, AlertCircle } from "lucide-react";
+import bgImage from "@/assets/brototype-bg.png";
+import { Plus, LogOut, Clock, CheckCircle2, AlertCircle, Shield } from "lucide-react";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -50,14 +51,28 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted">
-      <div className="container mx-auto px-4 py-8">
+    <div 
+      className="min-h-screen bg-gradient-to-br from-background via-background to-muted relative"
+      style={{
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url(${bgImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
+      }}
+    >
+      <div className="container mx-auto px-4 py-8 relative z-10">
         <nav className="flex justify-between items-center mb-8">
           <img src={logo} alt="Brototype" className="h-10 md:h-12" />
-          <Button variant="ghost" onClick={() => navigate("/")}>
-            <LogOut className="w-4 h-4 mr-2" />
-            Logout
-          </Button>
+          <div className="flex gap-3">
+            <Button variant="outline" onClick={() => navigate("/admin")}>
+              <Shield className="w-4 h-4 mr-2" />
+              Admin Portal
+            </Button>
+            <Button variant="ghost" onClick={() => navigate("/")}>
+              <LogOut className="w-4 h-4 mr-2" />
+              Logout
+            </Button>
+          </div>
         </nav>
 
         <div className="max-w-6xl mx-auto">
