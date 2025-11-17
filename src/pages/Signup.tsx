@@ -3,17 +3,62 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { useEffect, useState } from "react";
+import { toast } from "@/hooks/use-toast";
 import logo from "@/assets/brototype-logo.png";
 import bgImage from "@/assets/brototype-wall.png";
 import { ArrowLeft } from "lucide-react";
 
 const Signup = () => {
   const navigate = useNavigate();
+  const { signUp, user, role, loading } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Redirect if already logged in
+  useEffect(() => {
+    if (!loading && user && role) {
+      if (role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/dashboard");
+      }
+    }
+  }, [user, role, loading, navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement authentication
-    navigate("/dashboard");
+
+    if (password !== confirmPassword) {
+      toast({
+        title: "Password Mismatch",
+        description: "Passwords do not match",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    const { error } = await signUp(email, password);
+
+    if (error) {
+      toast({
+        title: "Signup Failed",
+        description: error.message || "Could not create account",
+        variant: "destructive",
+      });
+      setIsSubmitting(false);
+    } else {
+      toast({
+        title: "Account Created",
+        description: "Please check your email to verify your account",
+      });
+      navigate("/login");
+    }
   };
 
   return (
@@ -45,27 +90,43 @@ const Signup = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label htmlFor="name">Full Name</Label>
-            <Input id="name" type="text" placeholder="Your Name" required />
-          </div>
-
-          <div>
             <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" placeholder="your@email.com" required />
+            <Input 
+              id="email" 
+              type="email" 
+              placeholder="your@email.com" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required 
+            />
           </div>
 
           <div>
             <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" placeholder="••••••••" required />
+            <Input 
+              id="password" 
+              type="password" 
+              placeholder="••••••••" 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required 
+            />
           </div>
 
           <div>
             <Label htmlFor="confirmPassword">Confirm Password</Label>
-            <Input id="confirmPassword" type="password" placeholder="••••••••" required />
+            <Input 
+              id="confirmPassword" 
+              type="password" 
+              placeholder="••••••••" 
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required 
+            />
           </div>
 
-          <Button type="submit" className="w-full">
-            Create Account
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
+            {isSubmitting ? "Creating Account..." : "Create Account"}
           </Button>
 
           <div className="text-center text-sm text-muted-foreground">

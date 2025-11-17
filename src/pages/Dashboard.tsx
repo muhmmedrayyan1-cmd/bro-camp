@@ -3,12 +3,39 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { useComplaints } from "@/contexts/ComplaintContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { useEffect } from "react";
 import logo from "@/assets/brototype-logo.png";
 import bgImage from "@/assets/brototype-wall.png";
 import { Plus, LogOut, Clock, CheckCircle2, AlertCircle, Shield } from "lucide-react";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { user, role, loading, signOut } = useAuth();
+
+  // Redirect if not authenticated or wrong role
+  useEffect(() => {
+    if (!loading) {
+      if (!user) {
+        navigate("/login");
+      } else if (role === "admin") {
+        navigate("/admin");
+      }
+    }
+  }, [user, role, loading, navigate]);
+
+  const handleLogout = async () => {
+    await signOut();
+    navigate("/");
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
   const { complaints } = useComplaints();
 
   const getStatusIcon = (status: string) => {
@@ -64,11 +91,7 @@ const Dashboard = () => {
         <nav className="flex justify-between items-center mb-8">
           <img src={logo} alt="Brototype" className="h-10 md:h-12" />
           <div className="flex gap-3">
-            <Button variant="outline" onClick={() => navigate("/admin")}>
-              <Shield className="w-4 h-4 mr-2" />
-              Admin Portal
-            </Button>
-            <Button variant="ghost" onClick={() => navigate("/")}>
+            <Button variant="ghost" onClick={handleLogout}>
               <LogOut className="w-4 h-4 mr-2" />
               Logout
             </Button>
