@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { useComplaints } from "@/contexts/ComplaintContext";
 import logo from "@/assets/brototype-logo.png";
-import bgImage from "@/assets/brototype-bg.png";
+import bgImage from "@/assets/brototype-wall.png";
 import { Plus, LogOut, Clock, CheckCircle2, AlertCircle, Shield } from "lucide-react";
 
 const Dashboard = () => {

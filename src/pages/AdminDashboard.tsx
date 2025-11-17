@@ -11,7 +11,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useComplaints, Complaint } from "@/contexts/ComplaintContext";
 import logo from "@/assets/brototype-logo.png";
-import bgImage from "@/assets/brototype-bg.png";
+import bgImage from "@/assets/brototype-wall.png";
 import { LogOut, Clock, CheckCircle2, AlertCircle, Filter, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";

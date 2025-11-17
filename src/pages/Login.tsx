@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
 import logo from "@/assets/brototype-logo.png";
+import bgImage from "@/assets/brototype-wall.png";
 import { ArrowLeft } from "lucide-react";
 
 const Login = () => {
@@ -16,7 +17,15 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted flex items-center justify-center p-4">
+    <div 
+      className="min-h-screen bg-gradient-to-br from-background via-background to-muted flex items-center justify-center p-4"
+      style={{
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url(${bgImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
+      }}
+    >
       <Card className="w-full max-w-md p-8">
         <Button
           variant="ghost"
