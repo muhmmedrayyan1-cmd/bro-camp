@@ -46,8 +46,8 @@ const NewComplaint = () => {
     });
 
     toast({
-      title: "Complaint Submitted",
-      description: "Your complaint has been submitted successfully and is now visible to admins.",
+      title: "Report Submitted",
+      description: "Your report has been submitted successfully and is now visible to admins.",
     });
     
     navigate("/dashboard");
@@ -86,7 +86,7 @@ const NewComplaint = () => {
 
         <div className="max-w-3xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold mb-2">Submit New Complaint</h1>
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">Raise a Report</h1>
             <p className="text-muted-foreground">
               Provide detailed information to help us resolve your issue faster
             </p>
@@ -95,7 +95,7 @@ const NewComplaint = () => {
           <Card className="p-6 md:p-8">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <Label htmlFor="title">Complaint Title</Label>
+                <Label htmlFor="title">Report Title</Label>
                 <Input
                   id="title"
                   placeholder="Brief description of the issue"
@@ -139,7 +139,7 @@ const NewComplaint = () => {
                 <Label htmlFor="description">Description</Label>
                 <Textarea
                   id="description"
-                  placeholder="Provide detailed information about your complaint"
+                  placeholder="Provide detailed information about your report"
                   rows={6}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
@@ -201,7 +201,7 @@ const NewComplaint = () => {
               <div className="flex gap-3 pt-4">
                 <Button type="submit" className="flex-1">
                   <Upload className="w-4 h-4 mr-2" />
-                  Submit Complaint
+                  Submit Report
                 </Button>
                 <Button
                   type="button"

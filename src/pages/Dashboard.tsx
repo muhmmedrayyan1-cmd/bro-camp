@@ -77,27 +77,27 @@ const Dashboard = () => {
 
         <div className="max-w-6xl mx-auto">
           <div className="flex justify-between items-center mb-8">
-            <div>
-              <h1 className="text-3xl md:text-4xl font-bold mb-2">My Complaints</h1>
-              <p className="text-muted-foreground">Track and manage your submissions</p>
-            </div>
-            <Button onClick={() => navigate("/new-complaint")}>
-              <Plus className="w-4 h-4 mr-2" />
-              New Complaint
-            </Button>
+          <div>
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">My Reports</h1>
+            <p className="text-muted-foreground">Track and manage your submissions</p>
+          </div>
+          <Button onClick={() => navigate("/new-complaint")}>
+            <Plus className="w-4 h-4 mr-2" />
+            Raise a Report
+          </Button>
           </div>
 
           <div className="grid gap-6">
             {complaints.length === 0 ? (
               <Card className="p-12 text-center">
                 <AlertCircle className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-                <h3 className="text-xl font-bold mb-2">No Complaints Yet</h3>
+                <h3 className="text-xl font-bold mb-2">No Reports Yet</h3>
                 <p className="text-muted-foreground mb-6">
-                  You haven't submitted any complaints. Click the button above to get started.
+                  You haven't submitted any reports. Click the button above to get started.
                 </p>
                 <Button onClick={() => navigate("/new-complaint")}>
                   <Plus className="w-4 h-4 mr-2" />
-                  Submit Your First Complaint
+                  Submit Your First Report
                 </Button>
               </Card>
             ) : (

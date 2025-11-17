@@ -27,7 +27,7 @@ const AdminDashboard = () => {
     updateComplaintStatus(complaintId, newStatus);
     toast({
       title: "Status Updated",
-      description: `Complaint #${complaintId} status changed to ${newStatus.replace("-", " ")}`,
+      description: `Report #${complaintId} status changed to ${newStatus.replace("-", " ")}`,
     });
   };
 
@@ -109,8 +109,8 @@ const AdminDashboard = () => {
 
         <div className="max-w-6xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold mb-2">Admin Dashboard</h1>
-            <p className="text-muted-foreground">Manage and resolve student complaints</p>
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">Report Management</h1>
+            <p className="text-muted-foreground">Review and manage student submissions</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-4 mb-8">
@@ -179,11 +179,11 @@ const AdminDashboard = () => {
             {filteredComplaints.length === 0 ? (
               <Card className="p-12 text-center">
                 <AlertCircle className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-                <h3 className="text-xl font-bold mb-2">No Complaints Found</h3>
+                <h3 className="text-xl font-bold mb-2">No Reports Found</h3>
                 <p className="text-muted-foreground">
                   {statusFilter !== "all" || categoryFilter !== "all"
-                    ? "Try adjusting your filters to see more complaints."
-                    : "No complaints have been submitted yet."}
+                    ? "Try adjusting your filters"
+                    : "No reports have been submitted yet"}
                 </p>
               </Card>
             ) : (
