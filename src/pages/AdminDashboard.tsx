@@ -203,14 +203,36 @@ const AdminDashboard = () => {
                       </Badge>
                     </div>
                     <p className="text-muted-foreground mb-3">{complaint.description}</p>
-                    <div className="flex gap-2">
-                      {complaint.hasAudio && (
-                        <Badge variant="secondary">Audio Attached</Badge>
-                      )}
-                      {complaint.hasImages && (
-                        <Badge variant="secondary">Images Attached</Badge>
-                      )}
-                    </div>
+                    
+                    {(complaint.hasAudio || complaint.hasImages) && (
+                      <div className="space-y-3 mt-4">
+                        {complaint.audioFile && (
+                          <div>
+                            <p className="text-sm font-medium mb-2">Audio Recording:</p>
+                            <audio controls className="w-full max-w-md">
+                              <source src={URL.createObjectURL(complaint.audioFile)} type="audio/webm" />
+                              Your browser does not support the audio element.
+                            </audio>
+                          </div>
+                        )}
+                        
+                        {complaint.imageFiles && complaint.imageFiles.length > 0 && (
+                          <div>
+                            <p className="text-sm font-medium mb-2">Images:</p>
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                              {complaint.imageFiles.map((image, idx) => (
+                                <img 
+                                  key={idx}
+                                  src={URL.createObjectURL(image)} 
+                                  alt={`Report attachment ${idx + 1}`}
+                                  className="w-full h-32 object-cover rounded-md border border-border"
+                                />
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
 
                   <div className="lg:w-64 space-y-3">
