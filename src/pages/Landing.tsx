@@ -86,7 +86,7 @@ const Landing = () => {
                   Manage all complaints efficiently with our powerful admin dashboard. 
                   Review submissions, update statuses, and communicate with students seamlessly.
                 </p>
-                <Button variant="secondary" onClick={() => navigate("/admin")}>
+                <Button variant="secondary" onClick={() => navigate("/login")}>
                   Admin Portal
                 </Button>
               </div>
