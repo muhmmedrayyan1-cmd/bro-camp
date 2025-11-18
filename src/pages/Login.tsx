@@ -6,14 +6,40 @@ import { useNavigate } from "react-router-dom";
 import logo from "@/assets/brototype-logo.png";
 import bgImage from "@/assets/brototype-wall.png";
 import { ArrowLeft } from "lucide-react";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const [mobile, setMobile] = useState("");
+  const [otp, setOtp] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement authentication
-    navigate("/dashboard");
+    
+    if (!mobile || otp.length !== 13) {
+      toast({
+        title: "Error",
+        description: "Please enter mobile number and complete OTP",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Check OTP for authentication
+    if (otp === "brocampstudent") {
+      navigate("/dashboard");
+    } else if (otp === "brocampadmin") {
+      navigate("/admin");
+    } else {
+      toast({
+        title: "Invalid OTP",
+        description: "Please enter the correct OTP",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -43,15 +69,47 @@ const Login = () => {
           <p className="text-muted-foreground">Sign in to your account</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" placeholder="your@email.com" required />
+            <Label htmlFor="mobile">Mobile Number</Label>
+            <Input 
+              id="mobile" 
+              type="tel" 
+              placeholder="Enter your mobile number" 
+              value={mobile}
+              onChange={(e) => setMobile(e.target.value)}
+              required 
+            />
           </div>
 
           <div>
-            <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" placeholder="••••••••" required />
+            <Label htmlFor="otp">Enter OTP</Label>
+            <div className="flex justify-center mt-2">
+              <InputOTP
+                maxLength={13}
+                value={otp}
+                onChange={(value) => setOtp(value)}
+              >
+                <InputOTPGroup>
+                  <InputOTPSlot index={0} />
+                  <InputOTPSlot index={1} />
+                  <InputOTPSlot index={2} />
+                  <InputOTPSlot index={3} />
+                  <InputOTPSlot index={4} />
+                  <InputOTPSlot index={5} />
+                  <InputOTPSlot index={6} />
+                  <InputOTPSlot index={7} />
+                  <InputOTPSlot index={8} />
+                  <InputOTPSlot index={9} />
+                  <InputOTPSlot index={10} />
+                  <InputOTPSlot index={11} />
+                  <InputOTPSlot index={12} />
+                </InputOTPGroup>
+              </InputOTP>
+            </div>
+            <p className="text-xs text-muted-foreground text-center mt-2">
+              Student: brocampstudent | Admin: brocampadmin
+            </p>
           </div>
 
           <Button type="submit" className="w-full">
